@@ -20,9 +20,10 @@ test_session = {
 def hello():
     return "HelloGoodbye"
 
-@app.route('/Sessions',methods=['GET'])
+@app.route('/Sessions')
 def get_sessions():
-    return "All of the sessions"
+    all_sessions = Session.objects().to_json()
+    return Response(all_sessions,mimetype="application/jason",status=200)
 
 @app.route('/Sessions/<id>')
 def get_session_by_id(id):
@@ -36,5 +37,16 @@ def add_session():
     id = session.id
     return {'id':str(id)}, 200
     return jsonify(body)
+
+@app.route('/Sessions/<id>',methods=['PUT'])
+def update_session(id):
+    body = request.get_json()
+    Session.objects.get(id=id).update(**body)
+    return 'Session '+id+' updated',200
+
+@app.route('/Sessions/<id>',methods=['DELETE'])
+def delete_session(id):
+    Session.objects.get(id=id).delete()
+    return 'Session deleted ',200
 
 app.run()
