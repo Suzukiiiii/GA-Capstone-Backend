@@ -21,11 +21,10 @@ class Hand(db.Document):
     def is_pocketpair(self):
         return self.hole_cards[0].rank == self.hole_cards[1].rank
 
-    def is_connected():
+    def is_connected(self):
         return True
 class Session(db.Document):
     location = db.StringField(required=True)
     date = db.DateTimeField(default=datetime.datetime.now())
     start_money = db.IntField(default=0)
     end_money = db.IntField(default=0)
-    #hands = db.ListField(db.ReferenceField(Hand), default=[])

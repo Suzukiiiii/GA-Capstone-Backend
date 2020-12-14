@@ -41,7 +41,7 @@ def get_session_by_id(id):
     # get all hands in the session
     session_hands = Hand.objects(session_id__in=[id])
 
-
+    
     print('Session Hands: ',session_hands)
     return Response(session,mimetype="application/json",status=200)
 
@@ -67,27 +67,24 @@ def delete_session(id):
     Session.objects.get(id=id).delete()
     return 'Session deleted ',200
 
+# Add a new hand
 @app.route('/Sessions/<id>/Hands',methods=['POST'])
 def new_hand(id):
     print('Hand POST')
     body = request.get_json()
-    
-    print(body)
+
     hand_json = {"session_id":id}
 
-    hand=Hand(**hand_json).save()
+    hole_card1 = Card(body['card1_rank'],body['card1_suit'])
+    hole_card2 = Card(body['card2_rank'],body['card2_suit'])
+
+    hand=Hand(**hand_json)
+
+    hand.hole_cards.append(hole_card1)
+    hand.hole_cards.append(hole_card2)
+
+    print('Is hand pocket pair? ',hand.is_pocketpair())
+    hand.save()
     return {'id':str(hand.id)}, 200
 
-
 app.run(debug=DEBUG,port=PORT)
-
-#http://localhost:8000/Sessions/5fd6f791855daeabe7b9f61f/Hands
-
-# get all hands in 
-
-# JSON for testing hands POST
-{
-
-    "hole_cards": [{"rank":"A","suit":"h"},{"rank":"A","suit":"s"}]
-
-}
