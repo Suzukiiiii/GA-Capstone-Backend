@@ -4,6 +4,9 @@ from database.models import Session,Hand
 
 app = Flask(__name__)
 
+DEBUG = True
+PORT = 8000
+
 app.config['MONGODB_SETTINGS'] = {
     'host': 'mongodb://localhost/poker_hand_app'
 }
@@ -63,4 +66,4 @@ def get_hands_by_session(id):
 @app.route('/Session/<id>/Hands',methods=['POST'])
 def new_hand(id):
     return '',200
-app.run()
+app.run(debug=DEBUG,port=PORT)
