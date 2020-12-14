@@ -28,4 +28,4 @@ class Session(db.Document):
     date = db.DateTimeField(default=datetime.datetime.now())
     start_money = db.IntField(default=0)
     end_money = db.IntField(default=0)
-    hands = db.ListField(db.ReferenceField(Hand), default=[])
+    #hands = db.ListField(db.ReferenceField(Hand), default=[])

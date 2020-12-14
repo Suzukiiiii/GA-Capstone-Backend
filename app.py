@@ -34,7 +34,15 @@ def get_sessions():
 # Get Session by id
 @app.route('/Sessions/<id>')
 def get_session_by_id(id):
+
+    # get session with matching id
     session = Session.objects.get(id=id).to_json()
+
+    # get all hands in the session
+    session_hands = Hand.objects(session_id__in=[id])
+
+
+    print('Session Hands: ',session_hands)
     return Response(session,mimetype="application/json",status=200)
 
 # Add new Session
@@ -59,17 +67,16 @@ def delete_session(id):
     Session.objects.get(id=id).delete()
     return 'Session deleted ',200
 
-# Get all Hands by Session id
-# @app.route('/Session/<id>/Hands')
-# def get_hands_by_session(id):
-#     hands = Hand.objects().get(session_id=id).to_json()
-#     return Response(hands,mimetype="application/jason",status=200)
-
-@app.route('/Session/<id>/Hands',methods=['POST'])
+@app.route('/Sessions/<id>/Hands',methods=['POST'])
 def new_hand(id):
+    print('Hand POST')
     body = request.get_json()
-    hand=Hand(**body).save()
-    return 'hand posted',200
+    
+    print(body)
+    hand_json = {"session_id":id}
+
+    hand=Hand(**hand_json).save()
+    return {'id':str(hand.id)}, 200
 
 
 app.run(debug=DEBUG,port=PORT)
