@@ -24,6 +24,11 @@ def hello():
 def get_sessions():
     return "All of the sessions"
 
+@app.route('/Sessions/<id>')
+def get_session_by_id(id):
+    session = Session.objects.get(id=id).to_json()
+    return Response(session,mimetype="application/json",status=200)
+
 @app.route('/Sessions',methods=['POST'])
 def add_session():
     body = request.get_json()
