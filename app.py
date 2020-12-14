@@ -1,6 +1,6 @@
 from flask import Flask, request, Response,jsonify
 from database.db import initialize_db
-from database.models import Session,Hand
+from database.models import Session,Hand,Card
 
 app = Flask(__name__)
 
@@ -8,16 +8,15 @@ DEBUG = True
 PORT = 8000
 
 app.config['MONGODB_SETTINGS'] = {
-    'host': 'mongodb://localhost/poker_hand_app'
+    'host': 'mongodb://localhost/poker_hand_app',
+    'alias': 'default'
 }
 
 initialize_db(app)
 
-test_session = {
-    "location": "Jacks Place",
-    "start_money": 500,
-    "end_money": 550
-}
+
+
+#ROUTES
 
 @app.route('/')
 def hello():
@@ -42,7 +41,7 @@ def add_session():
     session = Session(**body).save()
     id = session.id
     return {'id':str(id)}, 200
-    return jsonify(body)
+    #return jsonify(body)
 
 # Update Session
 @app.route('/Sessions/<id>',methods=['PUT'])
@@ -65,5 +64,17 @@ def get_hands_by_session(id):
 
 @app.route('/Session/<id>/Hands',methods=['POST'])
 def new_hand(id):
-    return '',200
+    body = request.get_json()
+    hand=Hand(**body).save()
+    return 'hand posted',200
+
+
 app.run(debug=DEBUG,port=PORT)
+
+#http://localhost:8000/Sessions/5fd6f791855daeabe7b9f61f/Hands
+
+# {
+#     "session_id": "5fd6f791855daeabe7b9f61f",
+#     "hole_cards": [{"rank":"A","suit":"h"},{"rank":"A","suit":"s"}]
+
+# }
