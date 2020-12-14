@@ -2,14 +2,6 @@ from flask import Flask, request, Response,jsonify
 from database.db import initialize_db
 from database.models import Session,Hand,Card
 
-# from flask_mongoengine import MongoEngine
-
-# db = MongoEngine()
-
-# def initialize_db(app):
-#     db.init_app(app)
-#     print('connected to db',app)
-
 app = Flask(__name__)
 
 DEBUG = True

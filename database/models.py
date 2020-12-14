@@ -18,6 +18,9 @@ class Hand(db.Document):
     def is_suited(self):
         return self.hole_cards[0].suit == self.hole_cards[1].suit
     
+    def is_pocketpair(self):
+        return self.hole_cards[0].rank == self.hole_cards[1].rank
+
     def is_connected():
         return True
 class Session(db.Document):
