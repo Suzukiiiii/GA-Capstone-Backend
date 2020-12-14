@@ -62,4 +62,5 @@ def get_hands_by_session(id):
 
 @app.route('/Session/<id>/Hands',methods=['POST'])
 def new_hand(id):
+    return '',200
 app.run()

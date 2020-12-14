@@ -1,7 +1,7 @@
 from .db import db
 import datetime
 
-class Hand(db.Document):
+class Hand(db.EmbeddedDocument):
     session_id = db.StringField(required=True)
     hole_cards = db.ListField(db.StringField(),required=True)
     community_cards = db.ListField(db.StringField())
@@ -14,4 +14,4 @@ class Session(db.Document):
     date = db.DateTimeField(default=datetime.datetime.now())
     start_money = db.IntField(default=0)
     end_money = db.IntField(default=0)
-    hands = EmbeddedDocumentListField('Hand')
+    hands = db.ListField(EmbeddedDocumentField(Hand))
