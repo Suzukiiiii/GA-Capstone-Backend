@@ -2,19 +2,30 @@ from flask import Flask, request, Response,jsonify
 from database.db import initialize_db
 from database.models import Session,Hand,Card
 
+# from flask_mongoengine import MongoEngine
+
+# db = MongoEngine()
+
+# def initialize_db(app):
+#     db.init_app(app)
+#     print('connected to db',app)
+
 app = Flask(__name__)
 
 DEBUG = True
-PORT = 8000
+PORT = 5000
 
 app.config['MONGODB_SETTINGS'] = {
-    'host': 'mongodb://localhost/poker_hand_app',
-    'alias': 'default'
+    'host': 'localhost',
+    'port': 27017,
+    'connect': True,
+    'db': 'poker_hand_app'
 }
 
+# app.config['MONGODB_CONNECT'] = False
+
 initialize_db(app)
-
-
+#db.init_app(app)
 
 #ROUTES
 
@@ -26,7 +37,7 @@ def hello():
 @app.route('/Sessions')
 def get_sessions():
     all_sessions = Session.objects().to_json()
-    return Response(all_sessions,mimetype="application/jason",status=200)
+    return Response(all_sessions,mimetype="application/json",status=200)
 
 # Get Session by id
 @app.route('/Sessions/<id>')
@@ -57,10 +68,10 @@ def delete_session(id):
     return 'Session deleted ',200
 
 # Get all Hands by Session id
-@app.route('/Session/<id>/Hands')
-def get_hands_by_session(id):
-    hands = Hand.objects().get(session_id=id).to_json()
-    return Response(hands,mimetype="application/jason",status=200)
+# @app.route('/Session/<id>/Hands')
+# def get_hands_by_session(id):
+#     hands = Hand.objects().get(session_id=id).to_json()
+#     return Response(hands,mimetype="application/jason",status=200)
 
 @app.route('/Session/<id>/Hands',methods=['POST'])
 def new_hand(id):
@@ -73,8 +84,11 @@ app.run(debug=DEBUG,port=PORT)
 
 #http://localhost:8000/Sessions/5fd6f791855daeabe7b9f61f/Hands
 
-# {
-#     "session_id": "5fd6f791855daeabe7b9f61f",
-#     "hole_cards": [{"rank":"A","suit":"h"},{"rank":"A","suit":"s"}]
+# get all hands in 
 
-# }
+# JSON for testing hands POST
+{
+
+    "hole_cards": [{"rank":"A","suit":"h"},{"rank":"A","suit":"s"}]
+
+}
