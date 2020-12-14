@@ -41,7 +41,7 @@ def get_session_by_id(id):
     # get all hands in the session
     session_hands = Hand.objects(session_id__in=[id])
 
-    
+
     print('Session Hands: ',session_hands)
     return Response(session,mimetype="application/json",status=200)
 
@@ -66,6 +66,13 @@ def update_session(id):
 def delete_session(id):
     Session.objects.get(id=id).delete()
     return 'Session deleted ',200
+
+# Show hand
+@app.route('/Hands/<id>')
+def show_hand(id):
+    # get hand with matching id
+    hand = Hand.objects.get(id=id).to_json()
+    return Response(hand,mimetype="application/json",status=200)
 
 # Add a new hand
 @app.route('/Sessions/<id>/Hands',methods=['POST'])
