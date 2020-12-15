@@ -12,15 +12,10 @@ class Hand(db.Document):
     action = db.ListField(db.StringField(), default = [])
     starting_stack = db.IntField(default=0)
     ending_stack = db.IntField(default=0)
+    is_suited = db.BooleanField(default = False)
+    is_pocketpair = db.BooleanField(default = False)
+    rank_gap = db.IntField(default = 0)
     
-    def is_suited(self):
-        return self.hole_cards[0].suit == self.hole_cards[1].suit
-    
-    def is_pocketpair(self):
-        return self.hole_cards[0].rank == self.hole_cards[1].rank
-
-    def is_connected(self):
-        return True
 
 class Session(db.Document):
     location = db.StringField(required=True)
