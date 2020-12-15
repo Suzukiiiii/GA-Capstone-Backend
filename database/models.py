@@ -2,19 +2,17 @@ from .db import db
 import datetime
 
 class Card(db.EmbeddedDocument):
-    def __init__(self,rank,suit):
-        self.rank = rank
-        self.suit = suit
+    rank = db.StringField(default = 'A')
+    suit = db.StringField(defualt = 's')
 
 class Hand(db.Document):
     session_id = db.StringField(required=True)
     hole_cards = db.ListField(db.EmbeddedDocumentField(Card),default = [])
-    #hole_cards = db.ListField(db.StringField(),required=True)
     community_cards = db.ListField(db.StringField(), default = [])
     action = db.ListField(db.StringField(), default = [])
     starting_stack = db.IntField(default=0)
     ending_stack = db.IntField(default=0)
-
+    
     def is_suited(self):
         return self.hole_cards[0].suit == self.hole_cards[1].suit
     
@@ -23,6 +21,7 @@ class Hand(db.Document):
 
     def is_connected(self):
         return True
+
 class Session(db.Document):
     location = db.StringField(required=True)
     date = db.DateTimeField(default=datetime.datetime.now())

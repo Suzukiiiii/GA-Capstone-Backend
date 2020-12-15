@@ -70,9 +70,18 @@ def delete_session(id):
 # Show hand
 @app.route('/Hands/<id>')
 def show_hand(id):
+    print('Hand SHOW')
     # get hand with matching id
     hand = Hand.objects.get(id=id).to_json()
+    #return 'zzz'
     return Response(hand,mimetype="application/json",status=200)
+
+def create_card(rank,suit):
+    card = Card()
+    card.rank = rank
+    card.suit = suit
+
+    return card
 
 # Add a new hand
 @app.route('/Sessions/<id>/Hands',methods=['POST'])
@@ -82,15 +91,14 @@ def new_hand(id):
 
     hand_json = {"session_id":id}
 
-    hole_card1 = Card(body['card1_rank'],body['card1_suit'])
-    hole_card2 = Card(body['card2_rank'],body['card2_suit'])
+    hole_card1 = create_card(body['card1_rank'],body['card1_suit'])
+    hole_card2 = create_card(body['card2_rank'],body['card2_suit'])
 
     hand=Hand(**hand_json)
 
     hand.hole_cards.append(hole_card1)
     hand.hole_cards.append(hole_card2)
 
-    print('Is hand pocket pair? ',hand.is_pocketpair())
     hand.save()
     return {'id':str(hand.id)}, 200
 
