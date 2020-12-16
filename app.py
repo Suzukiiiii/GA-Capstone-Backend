@@ -1,7 +1,7 @@
 from flask import Flask, request, Response,jsonify
 from database.db import initialize_db
 from database.models import Session,Hand,Card
-
+from flask_cors import CORS
 app = Flask(__name__)
 
 DEBUG = True
@@ -18,6 +18,48 @@ app.config['MONGODB_SETTINGS'] = {
 
 initialize_db(app)
 #db.init_app(app)
+CORS(app)
+
+# HELPER METHODS
+
+def is_suited(card1,card2):
+        return card1.suit == card2.suit
+    
+def is_pocketpair(card1,card2):
+        return card1.rank == card2.rank
+
+def calc_rank_gap(card1,card2):
+        diff = 0
+
+        rank_map = {
+            "2":2,
+            "3":3,
+            "4":4,
+            "5":5,
+            "6":6,
+            "7":7,
+            "8":8,
+            "9":9,
+            "10":10,
+            "T":10,
+            "J":11,
+            "Q":12,
+            "K":13,
+            "A":14
+        }
+
+        # A can be 1 or 14, so calc the smaller absolute difference of 1-card or 14- card
+        # Other wise calc abs value of card1-card2
+        if(card1.rank == "A"):
+            diff = min(abs(1-rank_map[card2.rank]),abs(14-rank_map[card2.rank]))
+        elif(card2.rank == "A"):
+            diff = min(abs(rank_map[card1.rank]-1),abs(rank_map[card1.rank]-14))
+        else:
+            diff = abs(rank_map[card1.rank]-rank_map[card2.rank])
+        
+        # subtract 1 from diff
+        # that is the gap (number of spaces between ranks) between two cards
+        return diff - 1
 
 #ROUTES
 
@@ -67,6 +109,12 @@ def delete_session(id):
     Session.objects.get(id=id).delete()
     return 'Session deleted ',200
 
+# Index Hands in single session
+@app.route('/Sessions/<id>/Hands',methods=['GET'])
+def get_hands_in_session(id):
+    session_hands = Hand.objects(session_id__in=[id]).to_json()
+
+    return Response(session_hands,mimetype="application/json",status=200)
 # Show hand
 @app.route('/Hands/<id>')
 def show_hand(id):
@@ -82,44 +130,6 @@ def create_card(rank,suit):
     card.suit = suit
 
     return card
-
-def is_suited(card1,card2):
-        return card1.suit == card2.suit
-    
-def is_pocketpair(card1,card2):
-        return card1.rank == card2.rank
-
-def calc_rank_gap(card1,card2):
-        diff = 0
-
-        rank_map = {
-            "2":2,
-            "3":3,
-            "4":4,
-            "5":5,
-            "6":6,
-            "7":7,
-            "8":8,
-            "9":9,
-            "10":10,
-            "T":10,
-            "J":11,
-            "Q":12,
-            "K":13,
-            "A":14
-        }
-
-        # A can be 1 or 14
-        if(card1.rank == "A"):
-            diff = min(abs(1-rank_map[card2.rank]),abs(14-rank_map[card2.rank]))
-        elif(card2.rank == "A"):
-            diff = min(abs(rank_map[card1.rank]-1),abs(rank_map[card1.rank]-14))
-        else:
-            diff = abs(rank_map[card1.rank]-rank_map[card2.rank])
-        
-        # subtract 1 from diff
-        # that is the gap (number of spaces between ranks) between two cards
-        return diff - 1
 
 # Add a new hand
 @app.route('/Sessions/<id>/Hands',methods=['POST'])
@@ -143,5 +153,11 @@ def new_hand(id):
 
     hand.save()
     return {'id':str(hand.id)}, 200
+
+# Delete Hand
+@app.route('/Hands/<id>',methods=['DELETE'])
+def delete_hand(id):
+    Hand.objects.get(id=id).delete()
+    return 'Hand deleted ',200
 
 app.run(debug=DEBUG,port=PORT)
