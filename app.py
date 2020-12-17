@@ -67,6 +67,11 @@ def calc_rank_gap(card1,card2):
 def hello():
     return "HelloGoodbye"
 
+@app.route('/search')
+def data():
+    # here we want to get the value of user (i.e. ?user=some-value)
+    return ''
+
 # All Sessions
 @app.route('/Sessions')
 def get_sessions():
