@@ -9,7 +9,7 @@ class Hand(db.Document):
     session_id = db.StringField(required=True)
     hole_cards = db.ListField(db.EmbeddedDocumentField(Card),default = [])
     community_cards = db.ListField(db.EmbeddedDocumentField(Card), default = [])
-    action = db.StringField(required=True)
+    action = db.StringField(default='')
     starting_stack = db.IntField(default=0)
     ending_stack = db.IntField(default=0)
     delta = db.IntField(default=0)

@@ -64,6 +64,13 @@ def calc_rank_gap(card1,card2):
         # that is the gap (number of spaces between ranks) between two cards
         return diff - 1
 
+def create_card(rank,suit):
+    card = Card()
+    card.rank = rank
+    card.suit = suit
+
+    return card
+
 #ROUTES
 
 @app.route('/')
@@ -134,13 +141,6 @@ def show_hand(id):
     #return 'zzz'
     return Response(hand,mimetype="application/json",status=200)
 
-def create_card(rank,suit):
-    card = Card()
-    card.rank = rank
-    card.suit = suit
-
-    return card
-
 # Add a new hand
 @app.route('/Sessions/<id>/Hands',methods=['POST'])
 def new_hand(id):
@@ -156,13 +156,36 @@ def new_hand(id):
 
     hand.hole_cards.append(hole_card1)
     hand.hole_cards.append(hole_card2)
+    hand.action = body['action']
+    hand.is_suited = is_suited(hole_card1,hole_card2)
+    hand.is_pocketpair = is_pocketpair(hole_card1,hole_card2)
+    hand.rank_gap = calc_rank_gap(hole_card1,hole_card2)
+    hand.starting_stack = body['starting_stack']
+    hand.ending_stack = body['ending_stack']
+    hand.delta = get_delta(hand.starting_stack,hand.ending_stack)
+    hand.save()
+    return {'id':str(hand.id)}, 200
+
+#Update Hand
+@app.route('/Hand/<id>',methods=['PUT'])
+def edit_hand(id):
+    body = request.get_json()
+    print(body)
+
+    hand = Hand.objects.get(id=id)
+
+    hole_card1 = create_card(body['card1_rank'],body['card1_suit'])
+    hole_card2 = create_card(body['card2_rank'],body['card2_suit'])
+    hand.hole_cards = [hole_card1,hole_card2]
+
+    hand.action = (body['action'])
 
     hand.is_suited = is_suited(hole_card1,hole_card2)
     hand.is_pocketpair = is_pocketpair(hole_card1,hole_card2)
     hand.rank_gap = calc_rank_gap(hole_card1,hole_card2)
 
     hand.save()
-    return {'id':str(hand.id)}, 200
+    return 'Hand '+id+' updated',200
 
 # Delete Hand
 @app.route('/Hands/<id>',methods=['DELETE'])
