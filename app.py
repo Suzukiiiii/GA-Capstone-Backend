@@ -2,6 +2,7 @@ from flask import Flask, request, Response,jsonify
 from database.db import initialize_db
 from database.models import Session,Hand,Card
 from flask_cors import CORS
+import json
 app = Flask(__name__)
 
 DEBUG = True
@@ -86,9 +87,8 @@ def get_session_by_id(id):
     session = Session.objects.get(id=id).to_json()
 
     # get all hands in the session
-    session_hands = Hand.objects(session_id__in=[id])
-
-
+    session_hands = Hand.objects(session_id__in=[id]).to_json
+  
     print('Session Hands: ',session_hands)
     return Response(session,mimetype="application/json",status=200)
 
