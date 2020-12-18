@@ -22,6 +22,8 @@ initialize_db(app)
 CORS(app)
 
 # HELPER METHODS
+def get_delta(num1,num2):
+    return num2-num1
 
 def is_suited(card1,card2):
         return card1.suit == card2.suit
@@ -96,7 +98,10 @@ def get_session_by_id(id):
 @app.route('/Sessions',methods=['POST'])
 def add_session():
     body = request.get_json()
-    session = Session(**body).save()
+    print(body)
+    session = Session(**body)
+    session.delta = get_delta(session.start_money,session.end_money)
+    session.save()
     id = session.id
     return {'id':str(id)}, 200
     #return jsonify(body)
