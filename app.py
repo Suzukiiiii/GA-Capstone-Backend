@@ -23,7 +23,7 @@ CORS(app)
 
 # HELPER METHODS
 def get_delta(num1,num2):
-    return num2-num1
+    return (int(num2))-(int(num1))
 
 def is_suited(card1,card2):
         return card1.suit == card2.suit
