@@ -167,7 +167,7 @@ def new_hand(id):
     return {'id':str(hand.id)}, 200
 
 #Update Hand
-@app.route('/Hand/<id>',methods=['PUT'])
+@app.route('/Hands/<id>',methods=['PUT'])
 def edit_hand(id):
     body = request.get_json()
     print(body)
