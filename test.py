@@ -3,7 +3,6 @@ from flask import Flask, request, Response,jsonify
 from database.db import initialize_db
 from database.models import Session,Hand,Card
 
-body = {"location":"somewhere"}
-new_Session = Session(**body)
+session =  Session.objects.get(id='5fdc177e855dae9411e05c60')
 
-print(new_Session.location)
+print(session)
