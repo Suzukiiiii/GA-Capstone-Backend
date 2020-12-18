@@ -67,3 +67,6 @@ PUT '/Hands/\<id\>'
 
 ### Delete Hand
 DELETE '/Hands/\<id\>'
+
+## Future Enhancements
+I wanted to make a query route so users can search for hands meeting specific criteria across all sessions: such has hands that are suited, hands that are strongly connected, hands with rank > certain values
