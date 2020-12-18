@@ -138,7 +138,7 @@ def show_hand(id):
     print('Hand SHOW')
     # get hand with matching id
     hand = Hand.objects.get(id=id).to_json()
-    #return 'zzz'
+    print(hand)
     return Response(hand,mimetype="application/json",status=200)
 
 # Add a new hand
@@ -183,7 +183,9 @@ def edit_hand(id):
     hand.is_suited = is_suited(hole_card1,hole_card2)
     hand.is_pocketpair = is_pocketpair(hole_card1,hole_card2)
     hand.rank_gap = calc_rank_gap(hole_card1,hole_card2)
-
+    hand.starting_stack = body['starting_stack']
+    hand.ending_stack = body['ending_stack']
+    hand.delta = get_delta(hand.starting_stack,hand.ending_stack)
     hand.save()
     return 'Hand '+id+' updated',200
 
