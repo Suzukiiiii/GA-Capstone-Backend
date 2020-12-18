@@ -26,7 +26,7 @@ POST '/Sessions'
 Example Input
 ``` json
 {
-    "location": 'someplace',
+    "location": "someplace",
     "start_money": 15,
     "end_money":20
 }
@@ -41,10 +41,10 @@ POST '/Sessions/\<id\>/Hands'
 Example Input
 ``` json
 {
-    "card1_rank": 'A',
-    "card1_suit": 'h',
-    "card2_rank":'A',
-    "card2_suit":'s',
+    "card1_rank": "A",
+    "card1_suit": "h",
+    "card2_rank": "A",
+    "card2_suit": "s",
     "action":"folded pre =]",
     "starting_stack": 100,
     "ending_stack":100
@@ -55,10 +55,10 @@ Example Input
 PUT '/Hands/\<id\>'
 ``` json
 {
-    "card1_rank": 'A',
-    "card1_suit": 'h',
-    "card2_rank":'A',
-    "card2_suit":'s',
+    "card1_rank": "A",
+    "card1_suit": "h",
+    "card2_rank": "A",
+    "card2_suit": "s",
     "action":"just kidding would never fold this",
     "starting_stack": 100,
     "ending_stack":300
